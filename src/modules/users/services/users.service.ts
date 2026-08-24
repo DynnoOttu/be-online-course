@@ -32,4 +32,9 @@ export class UsersService {
       user as UserWithRoleAndPermissions,
     );
   }
+
+  async findById(id: number): Promise<UsersResponseDto | null> {
+    const user = await this.usersRepository.findById(id);
+    return user ? this.usersRepository.toResponseDto(user) : null;
+  }
 }

@@ -4,6 +4,7 @@ import { UserRole } from 'src/common/enums/user-role.enum';
 import { BaseResponse } from 'src/common/interface/base-response.interface';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { LoginDto } from 'src/modules/users/dto/login-dto';
+import { UsersResponseDto } from 'src/modules/users/dto/users-response-dto';
 import { UsersService } from 'src/modules/users/services/users.service';
 import { AuthResponseDto } from '../dto/auth-response.dto';
 import { JwtTokenService } from './jwt.service';
@@ -41,7 +42,7 @@ export class AuthService {
     }
 
     const { password, ...userWithoutPassword } = user;
-
+    console.log(password);
     const userDto =
       this.userService.transformToDtoWithoutPassword(userWithoutPassword);
 
@@ -96,5 +97,10 @@ export class AuthService {
     }
 
     return stats;
+  }
+
+  async validateUser(userId: number): Promise<UsersResponseDto | null> {
+    const user = await this.userService.findById(userId);
+    return user;
   }
 }
