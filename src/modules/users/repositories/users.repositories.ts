@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UsersResponseDto } from '../dto/users-response-dto';
-import { UserWithRoleAndPermissions } from '../types/users.types';
+import {
+  CreateUserData,
+  CreateUserProfileData,
+  UserWithRoleAndPermissions,
+} from '../types/users.types';
 
 @Injectable()
 export class UsersRepository {
@@ -72,5 +76,20 @@ export class UsersRepository {
       },
       include: this.userInclude,
     });
+  }
+
+  async createUserWithProfile(
+    userData: CreateUserData,
+    profileData?: CreateUserProfileData,
+  ): Promise<UserWithRoleAndPermissions> {
+    const user = await this.prisma.user.create({
+      data: {
+        ...userData,
+        userProfile: profileData ? { create: profileData } : undefined,
+      },
+      include: this.userInclude,
+    });
+
+    return user as UserWithRoleAndPermissions;
   }
 }

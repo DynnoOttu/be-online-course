@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { UsersResponseDto } from '../dto/users-response-dto';
 import { UsersRepository } from '../repositories/users.repositories';
 import {
+  CreateUserData,
+  CreateUserProfileData,
   UserWithRoleAndPermissions,
   UserWithRoleAndPermissionsWithoutPassword,
 } from '../types/users.types';
@@ -36,5 +38,21 @@ export class UsersService {
   async findById(id: number): Promise<UsersResponseDto | null> {
     const user = await this.usersRepository.findById(id);
     return user ? this.usersRepository.toResponseDto(user) : null;
+  }
+
+  async isEmailTaken(email: string): Promise<boolean> {
+    const user = await this.usersRepository.findByEmail(email);
+    return !!user;
+  }
+
+  async register(
+    userData: CreateUserData,
+    profileData: CreateUserProfileData,
+  ): Promise<UsersResponseDto> {
+    const user = await this.usersRepository.createUserWithProfile(
+      userData,
+      profileData,
+    );
+    return this.usersRepository.toResponseDto(user);
   }
 }

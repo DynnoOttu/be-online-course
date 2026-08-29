@@ -1,4 +1,4 @@
-import { Permission, Role, User, UserProfile } from '@prisma/client';
+import { Gender, Permission, Role, User, UserProfile } from '@prisma/client';
 
 export type UserWithRoleAndPermissions = User & {
   role: Role & {
@@ -25,7 +25,7 @@ export interface CreateUserData {
 }
 
 export interface CreateUserProfileData {
-  gender?: string;
+  gender?: Gender;
   avatar?: string;
   bio?: string;
   expertise?: string;
