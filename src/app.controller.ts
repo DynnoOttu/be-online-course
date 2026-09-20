@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { BaseResponse } from './common/interface/base-response.interface';
 import { PrismaService } from './common/prisma/prisma.service';
+import { CacheService } from './common/services/cache.service';
 import { EmailService } from './common/services/email.service';
 import { QueueService } from './common/services/queue.service';
 
@@ -12,6 +13,7 @@ export class AppController {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly queueService: QueueService,
+    private readonly cacheService: CacheService,
   ) {}
 
   @Get()
@@ -39,6 +41,20 @@ export class AppController {
     return {
       message: 'Test job added to queue',
       data: true,
+    };
+  }
+
+  @Get('test-cache')
+  async testCache(): Promise<BaseResponse<boolean>> {
+    const key = 'test:key';
+    const value = { message: 'Hello from cache' };
+
+    await this.cacheService.set(key, value);
+    const cacheValue = await this.cacheService.get(key);
+
+    return {
+      message: 'Cache test completed successfully',
+      data: JSON.stringify(cacheValue) === JSON.stringify(value),
     };
   }
 }

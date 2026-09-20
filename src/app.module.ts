@@ -5,7 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QueueModule } from './common/modules/queue.module';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { CacheService } from './common/services/cache.service';
 import { EmailService } from './common/services/email.service';
+import { RedisService } from './common/services/redis.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -30,6 +32,6 @@ import { UsersModule } from './modules/users/users.module';
     QueueModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EmailService],
+  providers: [AppService, EmailService, CacheService, RedisService],
 })
 export class AppModule {}
