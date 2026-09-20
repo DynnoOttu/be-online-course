@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { BaseResponse } from './common/interface/base-response.interface';
 import { PrismaService } from './common/prisma/prisma.service';
 import { EmailService } from './common/services/email.service';
+import { QueueService } from './common/services/queue.service';
 
 @Controller()
 export class AppController {
@@ -10,6 +11,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
+    private readonly queueService: QueueService,
   ) {}
 
   @Get()
@@ -28,6 +30,15 @@ export class AppController {
     return {
       message: 'Success',
       data: result,
+    };
+  }
+
+  @Get('test-email-queue')
+  async testQueue(): Promise<BaseResponse<boolean>> {
+    await this.queueService.sendEmailViaQueue();
+    return {
+      message: 'Test job added to queue',
+      data: true,
     };
   }
 }

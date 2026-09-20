@@ -18,7 +18,7 @@ export interface EmailOptions {
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
-  private transporter: Transporter;
+  private transporter!: Transporter;
 
   constructor(private configService: ConfigService) {
     this.CreateTransporter();
@@ -54,7 +54,7 @@ export class EmailService {
       this.logger.log('SMTP connection established successfully.');
     } catch (e) {
       this.logger.error('Failed to establish SMTP connection.', e);
-      //this.CreateTransporter();
+      this.CreateTransporter();
     }
   }
 
@@ -87,7 +87,7 @@ export class EmailService {
     }
   }
 
-  private compileTable(template: string, data: any): string {
+  public compileTamplate(template: string, data: any): string {
     try {
       const tamplatePath = path.join(
         process.cwd(),
@@ -108,7 +108,7 @@ export class EmailService {
   }
 
   async sendTestEmail(): Promise<boolean> {
-    const html = this.compileTable('test', {
+    const html = this.compileTamplate('test', {
       name: 'test user',
       timestamp: new Date().toLocaleString(),
     });
